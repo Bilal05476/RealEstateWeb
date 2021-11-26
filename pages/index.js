@@ -25,7 +25,7 @@ const Banner = ({
       <Text paddingTop="3" paddingBottom="3" fontSize="lg" color="gray.700">
         {desc1} <br /> {desc2}
       </Text>
-      <Button fontSize="xl" bg="blue.300" color="white">
+      <Button fontSize="xl" bg="blue.300" color="black">
         <Link href={linkName}>{buttonText}</Link>
       </Button>
     </Box>
