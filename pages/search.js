@@ -1,13 +1,17 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
-// import Image from "next/image";
+import Image from "next/image";
 import { Flex, Box, Text, Icon } from "@chakra-ui/react";
 import { BsFilter } from "react-icons/bs";
 import SearchFilter from "../component/SearchFilter";
+import { Property } from "../component/Property";
+import noresult from "../assets/no-result.png";
+import { fetchApi, baseURL } from "../utils/fetchApi";
 
-const Search = () => {
+const Search = ({ properties }) => {
   const [searchFilter, setSearchFilter] = useState(false);
   const router = useRouter();
+  console.log(properties);
   return (
     <Box>
       <Flex
@@ -26,7 +30,48 @@ const Search = () => {
         <Icon paddingLeft="2" w="7" as={BsFilter}></Icon>
       </Flex>
       {searchFilter && <SearchFilter />}
+      <Text fontSize="2xl" p="4" fontWeight="bold">
+        Properties {router.query.purpose}
+      </Text>
+      <Flex flexWrap="wrap">
+        {properties.map((property) => (
+          <Property property={property} key={property.id} />
+        ))}
+      </Flex>
+      {properties.length === 0 && (
+        <Flex
+          justifyContent="center"
+          alignItems="center"
+          flexDirection="column"
+          marginTop="5"
+          marginBottom="5"
+        >
+          <Image alt="no result" src={noresult} />
+        </Flex>
+      )}
     </Box>
   );
 };
 export default Search;
+
+export async function getServerSideProps({ query }) {
+  const purpose = query.purpose || "for-rent";
+  const rentFrequency = query.rentFrequency || "yearly";
+  const minPrice = query.minPrice || "0";
+  const maxPrice = query.maxPrice || "1000000";
+  const roomsMin = query.roomsMin || "0";
+  const bathsMin = query.bathsMin || "0";
+  const sort = query.sort || "price-desc";
+  const areaMax = query.areaMax || "35000";
+  const locationExternalIDs = query.locationExternalIDs || "5002";
+  const categoryExternalIDs = query.categoryExternalIDs || "4";
+
+  const data = await fetchApi(
+    `${baseURL}/properties/list?locationExternalIDs=${locationExternalIDs}&purpose=${purpose}&categoryExternalIDs=${categoryExternalIDs}&bathsMin=${bathsMin}&rentFrequency=${rentFrequency}&minPrice=${minPrice}&maxPrice=${maxPrice}&roomsMin=${roomsMin}&sort=${sort}&areaMax=${areaMax}`
+  );
+  return {
+    props: {
+      properties: data?.hits,
+    },
+  };
+}
