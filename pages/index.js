@@ -37,7 +37,6 @@ const Banner = ({
 export default function Home({ propertiesForRent, propertiesForSale }) {
   return (
     <Box>
-      <h1>Hello World</h1>
       <Banner
         purpose="Rent a Home"
         title1="Rental homes for"
@@ -63,9 +62,11 @@ export default function Home({ propertiesForRent, propertiesForSale }) {
         linkName="/search?purpose=for-sale"
         imageUrl={defaultImage}
       />
-      {propertiesForSale.map((property) => (
-        <Property property={property} key={property.id} />
-      ))}
+      <Flex flexWrap="wrap">
+        {propertiesForSale.map((property) => (
+          <Property property={property} key={property.id} />
+        ))}
+      </Flex>
     </Box>
   );
 }
