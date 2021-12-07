@@ -17,6 +17,7 @@ import { filterData, getFilterValues } from "../utils/filterData";
 const SearchFilter = () => {
   const [filter, setFilters] = useState(filterData);
   const router = useRouter();
+
   const searchProperties = (filterValues) => {
     const path = router.pathname;
     const {query} = router;
@@ -26,6 +27,7 @@ const SearchFilter = () => {
     })
     router.push({pathname: path, query})
   };
+  
   return (
     <Flex bg="gray.100" p="4" justifyContent="center" flexWrap="wrap">
       {filter.map((fil) => (
